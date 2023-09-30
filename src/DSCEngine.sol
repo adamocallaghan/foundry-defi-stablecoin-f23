@@ -336,4 +336,17 @@ contract DSCEngine is ReentrancyGuard {
         (, int256 price,,,) = priceFeed.latestRoundData();
         return ((uint256(price) * ADDITIONAL_FEED_PRECISION) * amount) / PRECISION;
     }
+
+    function getAccountInformation(address user)
+        external
+        view
+        returns (uint256 totalDscMinted, uint256 collateralValueInUsd)
+    {
+        (totalDscMinted, collateralValueInUsd) = _getAccountInformation(user); // do named params implicitly return??
+            // return (totalDscMinted, collateralValueInUsd);
+    }
+
+    function getCollateralAmount(address user, address collateralToken) public view returns (uint256) {
+        return s_collateralDeposited[user][collateralToken];
+    }
 }

@@ -76,4 +76,33 @@ contract DSCEngineTest is Test {
         dsce.depositCollateral(weth, 0);
         vm.stopPrank();
     }
+
+    function testRevertsWithUnapprovedCollateral() public {
+        ERC20Mock ranToken = new ERC20Mock("RanToken", "RAN", USER, AMOUNT_COLLATERAL); // make a mock token
+        vm.startPrank(USER); // create a user to test with
+        vm.expectRevert(DSCEngine.DSCEngine__NotAllowedToken.selector); // the following calls should revert with this
+        dsce.depositCollateral(address(ranToken), AMOUNT_COLLATERAL); // depositCollateral function with the random token
+        vm.stopPrank();
+    }
+
+    modifier depositdCollateral() {
+        vm.startPrank(USER);
+        ERC20Mock(weth).approve(address(dsce), AMOUNT_COLLATERAL);
+        dsce.depositCollateral(weth, AMOUNT_COLLATERAL);
+        vm.stopPrank();
+        _;
+    }
+
+    function testCanDepositCollateralAndGetAccountInfo() public depositdCollateral {
+        (uint256 totalDscMinted, uint256 collateralValueInUsd) = dsce.getAccountInformation(USER);
+
+        uint256 expectedTotalDscMinted = 0;
+        uint256 expectedDepositAmount = dsce.getTokenAmountFromUsd(weth, collateralValueInUsd);
+        assertEq(totalDscMinted, expectedTotalDscMinted);
+        assertEq(AMOUNT_COLLATERAL, expectedDepositAmount);
+    }
+
+    /////////////////////////////
+    // Redeem Collateral Tests //
+    /////////////////////////////
 }

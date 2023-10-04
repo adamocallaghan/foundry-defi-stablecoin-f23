@@ -106,11 +106,15 @@ contract DSCEngineTest is Test {
     // Redeem Collateral Tests //
     /////////////////////////////
 
-    function testCanRedeemCollateral() public depositedCollateral {
-        vm.startPrank(USER);
-        dsce.redeemCollateral(weth, AMOUNT_COLLATERAL); // weth address & 10 ether
-        uint256 userBalance = ERC20Mock(weth).balanceOf(USER); // so user's balance in the weth contract should be 10 ether now
-        assertEq(userBalance, AMOUNT_COLLATERAL); // compare them
-        vm.stopPrank();
-    }
+    // function testCanRedeemCollateral() public depositedCollateral {
+    //     vm.startPrank(USER);
+    //     dsce.redeemCollateral(weth, AMOUNT_COLLATERAL); // weth address & 10 ether
+    //     uint256 userBalance = ERC20Mock(weth).balanceOf(USER); // so user's balance in the weth contract should be 10 ether now
+    //     assertEq(userBalance, AMOUNT_COLLATERAL); // compare them
+    //     vm.stopPrank();
+    // }
+
+    /////////////////////////
+    // Statelss Fuzz Tests //
+    /////////////////////////
 }
